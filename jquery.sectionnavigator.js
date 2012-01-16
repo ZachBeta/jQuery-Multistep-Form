@@ -15,19 +15,21 @@
 		//put in top bar nav
 		$(this).parent().prepend('<div id="' + masterReference + '_navigator" style="display:none"></div>');
 
-		//create numbered links
+		//create numbered links with names
 		$(this).children().each( function(index){ 
 			if($('#' + masterReference + '_navigator').html() != ""){
 				$('#' + masterReference + '_navigator').append(' | ');
 			}	
-			$('#' + masterReference + '_navigator').append('<a stylehref="#" class="mnav_link" rel="sn_section_' + masterReference + '_' + index + '">' + index + '</a>');
+			$('#' + masterReference + '_navigator').append('<a stylehref="#" class="mnav_link" rel="sn_section_' + masterReference + '_' 
+            + (index) + '">' + (index +1)+": " + $(this).attr("name")  + '</a>');
 		});	
 		
 		
 		//put in next and prev buttons
 		$(this).children().each( function(index){ 
 			$(this).attr('id','sn_section_' + masterReference + '_' + index ); 
-			$(this).prepend('<div class="' + masterReference + '_navigation" style="min-height:26px;"><input type="button" value="Previous" class="prev" />'+ $('#' + masterReference + '_navigator').html() +' <input type="button" value="Next" class="next" style="float:right;" /></div>');	
+			$(this).prepend('<div class="' + masterReference + '_navigation" style="min-height:26px;"><input type="button" value="Previous" class="prev" />'
+            + $('#' + masterReference + '_navigator').html() +' <input type="button" value="Next" class="next" style="float:right;" /></div>');	
 		});
 		
 		$('.mnav_link').live( 'click', function(){ 	
@@ -47,18 +49,21 @@
 		
         $(this).children().hide();
         $(this).children().first().show();
-        $( ' .section:first .' + config.prevclass, this ).hide();
-		$( ' .section:last .' + config.nextclass , this ).hide();
-        
-		$('.' + config.nextclass ).live( 'click', function(){
+
+        //attach prev/next buttons
+		$('.' + config.nextclass ).on( 'click', function(){
 			$(this).parent().parent().hide().next().show();
 			return false;
 		} );
-		$('.' + config.prevclass ).live( 'click', function(){
+		$('.' + config.prevclass ).on( 'click', function(){
 			$(this).parent().parent().hide().prev().show();
 			return false;
 		} );
-				  
+        //exception for first and last
+		$( ' .section:last .' + config.nextclass , this ).off( 'click' );
+		$( ' .section:last .' + config.nextclass , this ).attr("disabled", true);
+        $( ' .section:first .' + config.prevclass, this ).off( 'click' );				  
+        $( ' .section:first .' + config.prevclass, this ).attr("disabled", true);
 		return this;
 		
 	};
